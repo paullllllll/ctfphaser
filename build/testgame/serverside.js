@@ -9,8 +9,15 @@ var server = http.createServer( function(req, res){
       
        
        console.log(req.url);
-
-       fs.createReadStream('./testgame.html').pipe(res);
+       if( req.url =='/'){
+              fs.createReadStream('./testgame.html').pipe(res);
+       }
+       else {
+       
+              fs.createReadStream('.'+req.url).pipe(res);
+              
+       }
+       
        
 });
 
