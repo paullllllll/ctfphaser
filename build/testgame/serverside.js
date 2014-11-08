@@ -1,19 +1,18 @@
 var http = require('http');
 var dgram = require('dgram');
 var fs = require('fs');
-var first = true;
+var url = require("url");
+
 var server = http.createServer( function(req, res){
        res.writeHead(200, 'good');
-       if(first){
+       
+       console.log(req.url.toString());
               
-              fs.createReadStream('./testgame.html').pipe(res);
-              first=false;
-       }
-       else{
+       fs.createReadStream('./testgame.html').pipe(res);
+       
+       fs.createReadStream(req.url).pipe(res);
               
-              fs.createReadStream(req.url).pipe(res);
-              
-       }
+       
        
 });
 
