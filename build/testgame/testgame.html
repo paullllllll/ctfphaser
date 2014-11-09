@@ -75,9 +75,13 @@
 			bullet.body.kinematic = true;
 	
 			bullet.body.velocity.x = 900*(pointer.x-(400))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-300)*(pointer.y-300)));
-			
-			bullet.body.velocity.y = 900*(pointer.y-(300))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-300)*(pointer.y-300)));
-			
+			if(player.body.y>287){
+				bullet.body.velocity.y = 900*(pointer.y-(300))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-300)*(pointer.y-300)));
+			}
+			else{
+				bullet.body.velocity.y = 900*(pointer.y-(300-(287-player.body.y+8)))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-(300-(287-player.body.y)))*(pointer.y-(300-(287-player.body.y)))));
+
+			}
 			bullet.body.angularVelocity = 30;
 	
 			console.log("angle vel: "+bullet.body.angularVelocity+" p x: "+pointer.x+" p y: "+pointer.y+" pl x: "+player.body.x+" pl y: "+player.body.y);
@@ -92,14 +96,14 @@
 			if (game.input.keyboard.isDown(Phaser.Keyboard.A))
 			{
 				
-				player.body.moveLeft(300);
+				player.body.moveLeft(330);
 				//player.body.angle = -15;
 
 			}
 			else if (game.input.keyboard.isDown(Phaser.Keyboard.D))
 			{
 				
-				player.body.moveRight(300);
+				player.body.moveRight(330);
 				//player.body.angle = 15;
 
 			}

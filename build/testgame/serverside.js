@@ -2,6 +2,8 @@ var http = require('http');
 var dgram = require('dgram');
 var fs = require('fs');
 var url = require("url");
+var ipware = require('ipware');
+
 
 var server = http.createServer( function(req, res){
        res.writeHead(200, 'good');
@@ -20,6 +22,8 @@ var server = http.createServer( function(req, res){
        
        
 });
+
+var socket = dgram.createSocket('udp4');
 
 
 server.listen(8080);
