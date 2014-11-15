@@ -3,14 +3,14 @@
 	<head>
 		
 		<script src="./phaser.js"></script>
-		<script type="text/javascript" src="./dgramclient.js"></script>
+		<script type="text/javascript" src="./peer.js"></script>
+		
 	<head>
 	
 	<body>
-		<script> 
+		<script>
 		
-		var dgram = require('dgram-browserify');
-		
+	
 		var game = new Phaser.Game(800, 600, Phaser.AUTO, 'testgame', 
 							{	preload: preload, 
 								create: create, 
@@ -23,6 +23,10 @@
 		var map, layer;
 		var fireRate = 100, nextFire = 0;
 		var bullets = [];
+		var playerCollisionGroup;
+   		var bulletCollisionGroup;
+		var wallCollisionGroup;
+		var health = 2;
 
 		function preload() {
 
@@ -40,6 +44,10 @@
                 
 			game.physics.startSystem(Phaser.Physics.P2JS);
 
+			var playerCollisionGroup = game.physics.p2.createCollisionGroup();
+   			var bulletCollisionGroup = game.physics.p2.createCollisionGroup();
+			var wallCollisionGroup = game.physics.p2.createCollisionGroup();
+			
 			map = game.add.tilemap('map');
 			map.addTilesetImage('tileset', 'tileset');		
 
@@ -49,7 +57,7 @@
 	
 		       	map.setCollision(1);
 	
-		       	mapPhys = game.physics.p2.convertTilemap(map,layer);
+		       	game.physics.p2.convertTilemap(map,layer);
 		       	
 		       	game.physics.p2.gravity.y =980;
 		       	game.physics.p2.friction = 1.5;
@@ -71,10 +79,12 @@
 		function fire(pointer){
 			if(pointer.x-400>0){  bullet = game.add.sprite(player.body.x+20, player.body.y-5, 'pew');  }
 			else{  bullet = game.add.sprite(player.body.x-20, player.body.y-5, 'pew');  }
+			
 			game.physics.p2.enable(bullet);
 			bullet.body.kinematic = true;
 	
 			bullet.body.velocity.x = 900*(pointer.x-(400))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-300)*(pointer.y-300)));
+			
 			if(player.body.y>287){
 				bullet.body.velocity.y = 900*(pointer.y-(300))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-300)*(pointer.y-300)));
 			}
@@ -82,12 +92,21 @@
 				bullet.body.velocity.y = 900*(pointer.y-(300-(287-player.body.y+8)))/(Math.sqrt((pointer.x-400)*(pointer.x-400)+(pointer.y-(300-(287-player.body.y)))*(pointer.y-(300-(287-player.body.y)))));
 
 			}
-			bullet.body.angularVelocity = 30;
+			bullet.body.angularVelocity = 40;
+			
+			bullet.body.setCollisionGroup(bulletCollisionGroup);
+	
+			bullet.body.collides(playerCollisionGroup, hitPlayer, this);
 	
 			console.log("angle vel: "+bullet.body.angularVelocity+" p x: "+pointer.x+" p y: "+pointer.y+" pl x: "+player.body.x+" pl y: "+player.body.y);
 			
 		}
 		
+		function hitPlayer(body1, body2){
+			
+			
+			
+		}
 		
 		function update() {
 			
@@ -119,12 +138,17 @@
 				player.body.moveUp(300);
                                 
 			}
+			
+			var buf = new Buffer();
+			var str = player.body.x+','+player.body.y+',';
+			//client.
+			
 		}
 
 
-        function render(){
-
-        }
+	        function render(){
+	
+	        }
 		
 		
 	

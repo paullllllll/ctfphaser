@@ -1,29 +1,25 @@
-var http = require('http');
-var dgram = require('dgram');
+
 var fs = require('fs');
-var url = require("url");
-var ipware = require('ipware');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 
-var server = http.createServer( function(req, res){
-       res.writeHead(200, 'good');
+app.get('/', function(req, res){
+  res.sendfile('testgame.html');
+});
        
-      
+app.get('/'+http.req.url, function(req,res){
        
-       console.log(req.url);
-       if( req.url =='/'){
-              fs.createReadStream('./testgame.html').pipe(res);
-       }
-       else {
-       
-              fs.createReadStream('.'+req.url).pipe(res);
-              
-       }
-       
+       res.sendfile('.'+http.req.url);
        
 });
 
-var socket = dgram.createSocket('udp4');
+var server = app.listen(3000, function () {
 
+  var host = server.address().address;
+  var port = server.address().port;
 
-server.listen(8080);
+  console.log('listening at http://%s:%s', host, port);
+
+});
